@@ -1,7 +1,11 @@
 data "archive_file" "lambda" {
+  depends_on = [
+    null_resource.run_yarn_tsc,
+  ]
+
   type        = "zip"
-  source_dir  = "./fn/dist/"
-  output_path = "artifact/${var.project_name}-upload-ssl-cert-to-s3-fn.zip"
+  source_dir  = "${path.module}/fn/dist/"
+  output_path = "${path.module}/artifact/${var.project_name}-upload-ssl-cert-to-s3-fn.zip"
 }
 
 resource "aws_iam_role" "lambda" {
@@ -56,9 +60,12 @@ resource "aws_iam_role_policy_attachment" "lambda" {
 }
 
 resource "aws_lambda_function" "main" {
-  function_name = "${var.project_name}-upload-ssl-cert-to-s3-fn"
-  role          = aws_iam_role.lambda.arn
-  handler       = "index.handler"
-  runtime       = "nodejs16.x"
-  filename      = data.archive_file.lambda.output_path
+  function_name    = "${var.project_name}-upload-ssl-cert-to-s3-fn"
+  role             = aws_iam_role.lambda.arn
+  handler          = "index.handler"
+  runtime          = "nodejs16.x"
+  filename         = data.archive_file.lambda.output_path
+  timeout          = 30
+  memory_size      = 128
+  source_code_hash = data.archive_file.lambda.output_base64sha256
 }
