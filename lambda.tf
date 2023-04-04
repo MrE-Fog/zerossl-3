@@ -1,7 +1,7 @@
 data "archive_file" "lambda" {
   type        = "zip"
-  source_dir  = "./fn/dist/"
-  output_path = "artifact/${var.project_name}-upload-ssl-cert-to-s3-fn.zip"
+  source_dir  = "${path.module}/fn/dist/"
+  output_path = "${path.module}/artifact/${var.project_name}-upload-ssl-cert-to-s3-fn.zip"
 }
 
 resource "aws_iam_role" "lambda" {
