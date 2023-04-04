@@ -8,6 +8,16 @@ variable "region" {
   description = "The AWS region to deploy to"
 }
 
+variable "access_key" {
+  type        = string
+  description = "value of access key"
+}
+
+variable "secret_key" {
+  type        = string
+  description = "value of secret key"
+}
+
 variable "environment" {
   type        = string
   description = "The environment to deploy to"
